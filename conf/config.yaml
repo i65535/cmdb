@@ -1,0 +1,19 @@
+service:
+  port: 8001
+  mode: release
+logger:
+  # ./logs/cmp.log
+  path: /opt/data/logs/cmp.log
+  level: debug
+  maxDay: 30
+  rotationHour: 24
+mysql:
+  username: root
+  password: 111111
+  domain: 127.0.0.1:3306
+  db: ifaascloud_cmp
+  maxOpenCount: 20
+  idleOpenCount: 10
+  charset: UTF8
+  logger: false
+
