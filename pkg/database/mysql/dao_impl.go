@@ -17,11 +17,11 @@ type PageData struct {
 	Data       interface{} `json:"data"`
 }
 
-
 type MySqlDaoImpl struct {
-	engine *xorm.Engine
+	engine    *xorm.Engine
 	tableName string
-	bean     interface{}
+	NewSlice  func() interface{}
+	bean      interface{}
 }
 
 func (m *MySqlDaoImpl)Init(tableName string, bean interface{}) {
@@ -35,7 +35,7 @@ func (m *MySqlDaoImpl)Init(tableName string, bean interface{}) {
 }
 
 func (m *MySqlDaoImpl)Create(beans ...interface{}) (int64, error) {
-	return m.engine.Insert(beans)
+	return m.engine.Table(m.tableName).Insert(beans)
 }
 
 func (m *MySqlDaoImpl)Count(bean ...interface{}) (int64, error) {
@@ -74,11 +74,12 @@ func (m *MySqlDaoImpl)ListCol(cols interface{}, columns string, query interface{
 	return m.engine.Table(m.tableName).Cols(columns).Where(query, args).Find(cols)
 }
 
-func (m *MySqlDaoImpl)ListPage(beans interface{}, page, pageSize int, orderBy string, query interface{}, args ...interface{}) (*PageData, error) {
+func (m *MySqlDaoImpl)ListPage(page, pageSize int, orderBy string, query interface{}, args ...interface{}) (*PageData, error) {
 	total, err := m.engine.Table(m.tableName).Where(query, args).Count(m.bean)
 	if err != nil{
 		return nil, err
 	}
+	beans := m.NewSlice()
 	err = m.engine.Table(m.tableName).Where(query, args).OrderBy(orderBy).Limit(pageSize, (page-1) * pageSize).Find(beans)
 	if err != nil{
 		return nil, err

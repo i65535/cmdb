@@ -18,6 +18,10 @@ func NewLabelDao() *LabelDaoImpl {
 	dao := LabelDaoImpl{}
 	m := new(models.Label)
 	dao.Init(m.TableName(), m)
+	dao.NewSlice = func() interface{} {
+		var slice []models.Label
+		return &slice
+	}
 
 	return &dao
 }
