@@ -39,11 +39,11 @@ func (m *MySqlDaoImpl)Create(beans ...interface{}) (int64, error) {
 }
 
 func (m *MySqlDaoImpl)Count(bean ...interface{}) (int64, error) {
-	return m.engine.Count(bean)
+	return m.engine.Table(m.tableName).Count(bean)
 }
 
 func (m *MySqlDaoImpl)DeleteBy(query interface{}, args ...interface{}) (int64, error) {
-	return m.engine.Where(query, args).Delete(m.bean)
+	return m.engine.Table(m.tableName).Where(query, args).Delete(m.bean)
 }
 
 func (m *MySqlDaoImpl)DeleteById(id interface{}) (int64, error) {
@@ -51,23 +51,23 @@ func (m *MySqlDaoImpl)DeleteById(id interface{}) (int64, error) {
 }
 
 func (m *MySqlDaoImpl)Update(id interface{}, bean interface{}) (int64, error) {
-	return m.engine.Id(id).Update(bean)
+	return m.engine.Table(m.tableName).ID(id).Update(bean)
 }
 
 func (m *MySqlDaoImpl)FindById(id interface{}, bean interface{}) (bool, error) {
-	return m.engine.Id(id).Get(bean)
+	return m.engine.Table(m.tableName).ID(id).Get(bean)
 }
 
 func (m *MySqlDaoImpl)Find(bean interface{}, query interface{}, args ...interface{}) (bool, error) {
-	return m.engine.Where(query, args).Get(bean)
+	return m.engine.Table(m.tableName).Where(query, args).Get(bean)
 }
 
 func (m *MySqlDaoImpl)ListAll(beans interface{}) (error) {
-	return m.engine.Find(beans)
+	return m.engine.Table(m.tableName).Find(beans)
 }
 
 func (m *MySqlDaoImpl)ListBy(beans interface{}, query interface{}, args ...interface{}) (error) {
-	return m.engine.Where(query, args).Find(beans)
+	return m.engine.Table(m.tableName).Where(query, args).Find(beans)
 }
 
 func (m *MySqlDaoImpl)ListCol(cols interface{}, columns string, query interface{}, args ...interface{}) (error) {
