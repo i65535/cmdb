@@ -38,6 +38,10 @@ func (m *MySqlDaoImpl)Create(beans ...interface{}) (int64, error) {
 	return m.engine.Table(m.tableName).Insert(beans)
 }
 
+func (m *MySqlDaoImpl)CreateWithMap(bean *map[string]interface{}) (int64, error) {
+	return m.engine.Table(m.tableName).Insert(*bean)
+}
+
 func (m *MySqlDaoImpl)Count(bean ...interface{}) (int64, error) {
 	return m.engine.Table(m.tableName).Count(bean)
 }
@@ -75,12 +79,12 @@ func (m *MySqlDaoImpl)ListCol(cols interface{}, columns string, query interface{
 }
 
 func (m *MySqlDaoImpl)ListPage(page, pageSize int, orderBy string, query interface{}, args ...interface{}) (*PageData, error) {
-	total, err := m.engine.Table(m.tableName).Where(query, args).Count(m.bean)
+	total, err := m.engine.Table(m.tableName).Where(query, args...).Count(m.bean)
 	if err != nil{
 		return nil, err
 	}
 	beans := m.NewSlice()
-	err = m.engine.Table(m.tableName).Where(query, args).OrderBy(orderBy).Limit(pageSize, (page-1) * pageSize).Find(beans)
+	err = m.engine.Table(m.tableName).Where(query, args...).OrderBy(orderBy).Limit(pageSize, (page-1) * pageSize).Find(beans)
 	if err != nil{
 		return nil, err
 	}
